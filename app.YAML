@@ -6,7 +6,7 @@ kind: Deployment
 # Metadata is information related to the object we created in Kubernetes
 metadata:
 # The name here is the name of our deployment
-  name: stedi-Breanna
+  name: stedi-breanna
 spec:
 # Replicas refers to the number of pods we deploy
   replicas: 1
@@ -15,21 +15,21 @@ spec:
 # Matchlabels are a label for my selector
     matchLabels:
 # App is a specific kind of label for my pod
-      app: stedi-Breanna
+      app: stedi-breanna
 # The Template describes all the features of my pod
   template:
 # Metadata provides labels for my template
     metadata:
       labels:
-        app: stedi-Breanna
+        app: stedi-breanna
 # The spec refers to the specification of my containers in my pod
     spec:
 # Containers can have one or more docker containers in the pod
       containers:
 # The name of the container is specified below
-        - name: stedi-Breanna
+        - name: stedi-breanna
 # The image is a prebuilt file containing the operating system
-          image: xxkanonxx/xxkanonxx-nginx
+          image: 
 # The ports is a list of tcp ports the pod listens on
           ports:
 # The container port is a specific port the pod listens on
@@ -55,11 +55,11 @@ spec:
 # Path defines the url to use when doing the HTTP request
   #            path: /
 # Port defines the port to use when doing the HTTP request
-  #            port: 4567
+              port: 4567
 # initialDelaySeconds tells Kubernetes to wait before doing a request
-  ##          initialDelaySeconds: 10
+          initialDelaySeconds: 10
 # periodSeconds tells Kubernetes how often to check health
-   ##         periodSeconds: 3
+           periodSeconds: 3
 ---
 
   #load balancer 
@@ -71,13 +71,13 @@ kind: Service
 # metadat conains attributes about the object
 metadata: 
 #name is the name of the object we are creating
-  name: stedi-Breanna-loadbalancer
+  name: stedi-breanna-loadbalancer
 #Spec is the specification for the object, the load balancer
 spec: 
 #selector tells the network layer how to find the right pod
   selector: 
 #App tells the selector which app to send traffict to
-    app: stedi-Breanna
+    app: stedi-breanna
 #type tells kubernetes the type of sevice we want
 #a LoadBalancer distributes network packets to one or more pods
   type: LoadBalancer
