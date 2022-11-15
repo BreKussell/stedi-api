@@ -119,7 +119,7 @@ spec:
     name: stedi-nodeport-breanna 
 spec:  
   selector: 
-    app:stedi 
+    app:stedi-breanna 
   type:NodePort 
   ports: 
     - port: 80
