@@ -1,0 +1,126 @@
+# This is the version of YAML we are using with the Kubernetes API
+apiVersion: apps/v1
+# The kind is the type of kubernetes resource we are using
+# A deployment is when we run code on a server
+kind: Deployment
+# Metadata is information related to the object we created in Kubernetes
+metadata:
+# The name here is the name of our deployment
+  name: stedi-Breanna
+spec:
+# Replicas refers to the number of pods we deploy
+  replicas: 1
+# A selector is a route to my pod
+  selector:
+# Matchlabels are a label for my selector
+    matchLabels:
+# App is a specific kind of label for my pod
+      app: stedi-Breanna
+# The Template describes all the features of my pod
+  template:
+# Metadata provides labels for my template
+    metadata:
+      labels:
+        app: stedi-Breanna
+# The spec refers to the specification of my containers in my pod
+    spec:
+# Containers can have one or more docker containers in the pod
+      containers:
+# The name of the container is specified below
+        - name: stedi-Breanna
+# The image is a prebuilt file containing the operating system
+          image: xxkanonxx/xxkanonxx-nginx
+# The ports is a list of tcp ports the pod listens on
+          ports:
+# The container port is a specific port the pod listens on
+           - containerPort: 4567
+# Resources are the compute resources used by the pod in the cloud
+          resources:
+# Limits represent the max amount of cpu and memory allowed for the pod
+            limits:
+# CPU is the max amount of CPU that can be used by the pod
+              cpu: ".5"
+# Memory is the max amount of memory that can be used by the pod
+              memory: "500Mi"
+# Requests is the minimum amount of compute resources used by the pod
+            requests:
+# CPU is the minimum amount of CPU the pod needs to run
+              cpu: ".25"
+# Memory is the minimum amount of memory the pod needs to run
+              memory: "250Mi"
+# LivenessProbe is a configuration that checks the pod for health
+ #         livenessProbe:
+# HttpGet instructs kubernetes to do an HTTP request to check health
+#           httpGet:
+# Path defines the url to use when doing the HTTP request
+  #            path: /
+# Port defines the port to use when doing the HTTP request
+  #            port: 4567
+# initialDelaySeconds tells Kubernetes to wait before doing a request
+  ##          initialDelaySeconds: 10
+# periodSeconds tells Kubernetes how often to check health
+   ##         periodSeconds: 3
+---
+
+  #load balancer 
+  
+#API version tells kubernetes which bersion of yaml to use 
+apiVersion: v1
+#kind tells kubernetes what kind of object ot create 
+kind: Service 
+# metadat conains attributes about the object
+metadata: 
+#name is the name of the object we are creating
+  name: stedi-Breanna-loadbalancer
+#Spec is the specification for the object, the load balancer
+spec: 
+#selector tells the network layer how to find the right pod
+  selector: 
+#App tells the selector which app to send traffict to
+    app: stedi-Breanna
+#type tells kubernetes the type of sevice we want
+#a LoadBalancer distributes network packets to one or more pods
+  type: LoadBalancer
+#ports are a list of ports the load balancer listens on 
+  ports:
+#port is the port we want to listen on adthe netowrk
+  - port: 80
+#targetport is the port the pod listens on  
+      targetPort: 4567
+---
+#Certificate 
+apiVersion: networking.gke.io/v1 
+kind: ManagedCertificate 
+metadata: 
+  name: stedi-certificate-breanna 
+  spec: 
+    domains: 
+      - breannastedi.cit262
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stedi-ingress-breanna
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: stedi-public-breanna
+    networking.gke.io/managed-certificates: stedi-certificate-breanna
+    kubernetes.io/ingress.allow-http: "false"
+    #
+    kubernetes.io/ingress.class: "gce"
+spec:
+  defaultBackend:
+    service:
+      name:stedi-nodeport-breanna
+      port:
+        number:80    
+---
+  apiVersion: v1 
+  kind:service 
+    name: stedi-nodeport-breanna 
+spec:  
+  selector: 
+    app:stedi 
+  type:NodePort 
+  ports: 
+    - port: 80
+---
