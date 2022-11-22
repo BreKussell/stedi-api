@@ -1,101 +1,116 @@
-# This is the version of YAML we are using with the Kubernetes API
+# this is a comment
+# this is the version of YAML we are using with the Kubernetes API
 apiVersion: apps/v1
-# The kind is the type of kubernetes resource we are using
+# The kind is the type of Kubernetes resource we are using
 # A deployment is when we run code on a server
 kind: Deployment
-# Metadata is information related to the object we created in Kubernetes
+# Metadata is the information related to the object we created in Kubernetes
 metadata:
-# The name here is the name of our deployment
+# the name here is the name of our deployment
   name: stedi-breanna
 spec:
-# Replicas refers to the number of pods we deploy
+# Replicasrefers ti the number of pods we deploy
   replicas: 1
 # A selector is a route to my pod
   selector:
-# Matchlabels are a label for my selector
+# MatchLabels are a label for my selector
     matchLabels:
 # App is a specific kind of label for my pod
       app: stedi-breanna
-# The Template describes all the features of my pod
+# The template describes all the features of my pod
   template:
-# Metadata provides labels for my template
     metadata:
       labels:
         app: stedi-breanna
 # The spec refers to the specification of my containers in my pod
     spec:
-# Containers can have one or more docker containers in the pod
+# containers can have one or more Docker containers in the pod
       containers:
-# The name of the container is specified below
-        - name: stedi-breanna
-# The image is a prebuilt file containing the operating system
-          image: 
+# the name of the container is specified below
+        - name: stedi-kevin-breanna
+# the image is a prebuild file containing the operating system
+          image: gcr.io/cit262-group-project/stedi-breanna
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secrets-dev-breanna
+                  key: REDIS_PASS
+            - name: REDIS_HOST
+              value: "redis-stedi-dev-breanna"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_DB
+              value: "0"
 # The ports is a list of tcp ports the pod listens on
           ports:
 # The container port is a specific port the pod listens on
-           - containerPort: 4567
+          - containerPort: 4567
 # Resources are the compute resources used by the pod in the cloud
           resources:
 # Limits represent the max amount of cpu and memory allowed for the pod
             limits:
-# CPU is the max amount of CPU that can be used by the pod
-              cpu: ".5"
-# Memory is the max amount of memory that can be used by the pod
+# CPU is the max amount of CPU that can by used by the pod
+              cpu: ".125"
+# Memory is the max amount of memory that can by used by the pod
               memory: "500Mi"
 # Requests is the minimum amount of compute resources used by the pod
             requests:
 # CPU is the minimum amount of CPU the pod needs to run
-              cpu: ".25"
+                cpu: ".125"
 # Memory is the minimum amount of memory the pod needs to run
-              memory: "250Mi"
+                memory: "250Mi"
 # LivenessProbe is a configuration that checks the pod for health
- #         livenessProbe:
-# HttpGet instructs kubernetes to do an HTTP request to check health
-#           httpGet:
+          livenessProbe:
+# HttpGet instructs kupernetes to do a HTTP request to check health
+            httpGet:
 # Path defines the url to use when doing the HTTP request
               path: /
 # Port defines the port to use when doing the HTTP request
               port: 4567
-# initialDelaySeconds tells Kubernetes to wait before doing a request
-          initialDelaySeconds: 10
+# initialDelaySeconds tells kupernetes to wait before doing a request
+            initialDelaySeconds: 10
 # periodSeconds tells Kubernetes how often to check health
-           periodSeconds: 3
----
+            periodSeconds: 3
+          
 
-  #load balancer 
-  
-#API version tells kubernetes which bersion of yaml to use 
-apiVersion: v1
-#kind tells kubernetes what kind of object ot create 
-kind: Service 
-# metadat conains attributes about the object
-metadata: 
-#name is the name of the object we are creating
-  name: stedi-breanna-loadbalancer
-#Spec is the specification for the object, the load balancer
-spec: 
-#selector tells the network layer how to find the right pod
-  selector: 
-#App tells the selector which app to send traffict to
-    app: stedi-breanna
-#type tells kubernetes the type of sevice we want
-#a LoadBalancer distributes network packets to one or more pods
-  type: LoadBalancer
-#ports are a list of ports the load balancer listens on 
-  ports:
-#port is the port we want to listen on adthe netowrk
-  - port: 80
-#targetport is the port the pod listens on  
-      targetPort: 4567
 ---
-#Certificate 
-apiVersion: networking.gke.io/v1 
-kind: ManagedCertificate 
-metadata: 
-  name: stedi-certificate-breanna 
-  spec: 
-    domains: 
-      - breannastedi.cit262
+# # apiVersion tells kubernetes which verion of yaml to use
+# apiVersion: v1
+# # kind tells kubernetes what kind of object to create
+# kind: Service
+# # metadata containsattributes about the object
+# metadata:
+# # name is the name of the object we are creating
+#   name: stedi-kevin-collins-loadbalancer
+# # spect is the specification for the object (or the loadbalancer)
+# spec:
+# # selector tells the network layer  how to find the right pod
+#   selector:
+# # app tells the selector which app to send the traffic to
+#     app: stedi-kevin-collins
+# # type tells kubernetes the type of service we want
+# # a LoadBalancer distributes network packets to one or more pods
+#   type: LoadBalancer
+# # ports are a list of ports the Load Balancer listens on
+#   ports:
+# # port is the port we want to losten on the network
+#     - port: 80
+# # target port is the port the pod listens on inside kubernetes
+#       targetPort: 4567
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: stedi-nodeport-breanna
+spec:
+  selector:
+    app: stedi-breanna
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 4567
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -105,22 +120,18 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: stedi-public-breanna
     networking.gke.io/managed-certificates: stedi-certificate-breanna
     kubernetes.io/ingress.allow-http: "false"
-    #
     kubernetes.io/ingress.class: "gce"
 spec:
   defaultBackend:
     service:
-      name:stedi-nodeport-breanna
-      port:
-        number:80    
+      name: stedi-nodeport-kevin-collins
+      port: 
+        number: 80
 ---
-  apiVersion: v1 
-  kind:service 
-    name: stedi-nodeport-breanna 
-spec:  
-  selector: 
-    app:stedi-breanna 
-  type:NodePort 
-  ports: 
-    - port: 80
----
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: stedi-certificate-breanna
+spec:
+  domains:
+   # - breannarussell.cit262.com
