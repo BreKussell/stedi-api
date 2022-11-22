@@ -1,32 +1,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis-stedi-dev-
+  name: redis-stedi-dev-breanna
 spec:
   ports:
     - port: 6379
       name: redis
   clusterIP: None
   selector:
-    app: redis-stedi-dev-
+    app: redis-stedi-dev-breanna
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis-stedi-dev-
+  name: redis-stedi-dev-breanna
 spec:
   selector:
     matchLabels:
-      app: redis-stedi-dev-  # has to match .spec.template.metadata.labels
-  serviceName: redis-stedi-dev-
+      app: redis-stedi-dev-breanna  # has to match .spec.template.metadata.labels
+  serviceName: redis-stedi-dev-breanna
   replicas: 1
   template:
     metadata:
       labels:
-        app: redis-stedi-dev-  # has to match .spec.selector.matchLabels
+        app: redis-stedi-dev-breanna  # has to match .spec.selector.matchLabels
     spec:
       containers:
-        - name: redis-stedi-dev-
+        - name: redis-stedi-dev-breanna
           image: redis:7.0.5-alpine
           imagePullPolicy: Always
           args: ["--requirepass", "$(REDIS_PASS)", "--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
@@ -51,7 +51,7 @@ spec:
           - name: REDIS_PASS
             valueFrom:
               secretKeyRef:
-                name: redis-secrets-dev-
+                name: redis-secrets-dev-breanna
                 key: REDIS_PASS
           volumeMounts:
             - name: redis-dev-volume
