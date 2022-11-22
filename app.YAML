@@ -27,7 +27,7 @@ spec:
 # containers can have one or more Docker containers in the pod
       containers:
 # the name of the container is specified below
-        - name: stedi-kevin-breanna
+        - name: stedi-breanna
 # the image is a prebuild file containing the operating system
           image: gcr.io/cit262-group-project/stedi-breanna
           env:
