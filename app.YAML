@@ -82,13 +82,13 @@ spec:
 # # metadata containsattributes about the object
 # metadata:
 # # name is the name of the object we are creating
-#   name: stedi-kevin-collins-loadbalancer
+#   name: stedi-breanna-loadbalancer
 # # spect is the specification for the object (or the loadbalancer)
 # spec:
 # # selector tells the network layer  how to find the right pod
 #   selector:
 # # app tells the selector which app to send the traffic to
-#     app: stedi-kevin-collins
+#     app: stedi-breanna
 # # type tells kubernetes the type of service we want
 # # a LoadBalancer distributes network packets to one or more pods
 #   type: LoadBalancer
@@ -124,7 +124,7 @@ metadata:
 spec:
   defaultBackend:
     service:
-      name: stedi-nodeport-kevin-collins
+      name: stedi-nodeport-breanna
       port: 
         number: 80
 ---
