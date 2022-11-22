@@ -81,23 +81,23 @@ spec:
 # kind: Service
 # # metadata containsattributes about the object
 # metadata:
-# # name is the name of the object we are creating
-#   name: stedi-breanna-loadbalancer
-# # spect is the specification for the object (or the loadbalancer)
-# spec:
-# # selector tells the network layer  how to find the right pod
-#   selector:
-# # app tells the selector which app to send the traffic to
-#     app: stedi-breanna
-# # type tells kubernetes the type of service we want
-# # a LoadBalancer distributes network packets to one or more pods
-#   type: LoadBalancer
-# # ports are a list of ports the Load Balancer listens on
-#   ports:
-# # port is the port we want to losten on the network
-#     - port: 80
-# # target port is the port the pod listens on inside kubernetes
-#       targetPort: 4567
+ # name is the name of the object we are creating
+   name: stedi-breanna-loadbalancer
+ # spect is the specification for the object (or the loadbalancer)
+ spec:
+ # selector tells the network layer  how to find the right pod
+   selector:
+ # app tells the selector which app to send the traffic to
+     app: stedi-breanna
+ # type tells kubernetes the type of service we want
+ # a LoadBalancer distributes network packets to one or more pods
+   type: LoadBalancer
+ # ports are a list of ports the Load Balancer listens on
+   ports:
+ # port is the port we want to losten on the network
+     - port: 80
+ # target port is the port the pod listens on inside kubernetes
+       targetPort: 4567
 
 
 apiVersion: v1
