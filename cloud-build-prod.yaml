@@ -1,0 +1,49 @@
+steps:
+  
+
+  # This step stops the stedi pod
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Stop Pod
+    args:
+      - 'scale'
+      - 'deploy'
+      - 'stedi-breanna'
+      - '--replicas=0'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+
+      # This step deploys the application in Kubernetes
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - run
+      - --filename=app.yaml
+      - --image=gcr.io/$PROJECT_ID/stedi-breanna:$SHORT_SHA
+      - --output=/tmp/outputprod
+      - --location=us-central1-c
+      - --cluster=cluster-1
+
+  #   # This step runs the stedi-breanna Image 
+  #   # The PROJECT_ID variable is automatically
+  #   # replaced by Cloud Build.
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   id: Test
+  #   env:
+  #     - 'NODE_ENV=development'
+  #   args:
+  #     - 'run'
+  #     - 'gcr.io/$PROJECT_ID/stedi-breanna:latest'
+  #     - 'npm'
+  #     - 'run'
+  #     - 'test'
+  # This step scales up the stedi pod
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: Start Pod
+    args:
+      - 'scale'
+      - 'deploy'
+      - 'stedi-breanna'
+      - '--replicas=1'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
